@@ -1,33 +1,31 @@
 """
-A string S consisting of N characters is considered to be properly nested if any of the following conditions is true:
+A string S consisting of N characters is called properly nested if:
 
         S is empty;
-        S has the form "(U)" or "[U]" or "{U}" where U is a properly nested string;
+        S has the form "(U)" where U is a properly nested string;
         S has the form "VW" where V and W are properly nested strings.
 
-For example, the string "{[()()]}" is properly nested but "([)()]" is not.
+For example, string "(()(())())" is properly nested but string "())" isn't.
 
 Write a function:
 
     def solution(S)
 
-that, given a string S consisting of N characters, returns 1 if S is properly nested and 0 otherwise.
+that, given a string S consisting of N characters, returns 1 if string S is properly nested and 0 otherwise.
 
-For example, given S = "{[()()]}", the function should return 1 and given S = "([)()]", the function should return 0, as explained above.
+For example, given S = "(()(())())", the function should return 1 and given S = "())", the function should return 0, as explained above.
 
 Write an efficient algorithm for the following assumptions:
 
-        N is an integer within the range [0..200,000];
-        string S consists only of the following characters: "(", "{", "[", "]", "}" and/or ")".
+        N is an integer within the range [0..1,000,000];
+        string S consists only of the characters "(" and/or ")".
 """
-
-
 import unittest
 from collections import deque
 
 
 def solution(S: str) -> int:
-    matching_pairs = {"{": "}", "[": "]", "(": ")"}
+    matching_pairs = {"(": ")"}
 
     closing_brackets = set(matching_pairs.values())
     brackets = set(bracket
@@ -59,32 +57,28 @@ def solution(S: str) -> int:
 
         brackets_stack.pop()
 
-    return 0 if len(brackets_stack) else 1
+    return 1 if not brackets_stack else 0
 
 
 class SolutionTests(unittest.TestCase):
     def test_case_1(self):
         result = solution("")
-        self.assertEqual(result, 1)
+        self.assertTrue(result)
 
     def test_case_2(self):
-        result = solution("(U)")
-        self.assertEqual(result, 1)
-
-    def test_case_3(self):
-        result = solution("{U}")
-        self.assertEqual(result, 1)
+        result = solution("(((())))")
+        self.assertTrue(result)
 
     def test_case_4(self):
-        result = solution("{[()()]}")
-        self.assertEqual(result, 1)
+        result = solution("((()()))")
+        self.assertTrue(result)
 
     def test_case_5(self):
-        result = solution("VW")
-        self.assertEqual(result, 1)
+        result = solution("((()))(()()(()))")
+        self.assertTrue(result)
 
     def test_case_6(self):
-        result = solution("([)()]")
+        result = solution("(()()]")
         self.assertFalse(result)
 
     def test_case_7(self):
@@ -92,11 +86,11 @@ class SolutionTests(unittest.TestCase):
         self.assertFalse(result)
 
     def test_case_8(self):
-        result = solution("[()}")
+        result = solution("(()(")
         self.assertFalse(result)
 
     def test_case_9(self):
-        result = solution("{{{{")
+        result = solution("((((")
         self.assertFalse(result)
 
 
